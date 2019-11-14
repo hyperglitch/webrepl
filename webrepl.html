@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MicroPython WebREPL</title>
 <!--
   term.js
@@ -10,6 +12,7 @@
 <style>
   html {
     background: #555;
+    font-family: sans-serif;
   }
 
   h1 {
@@ -33,10 +36,119 @@
   }
 */
 
+  form{
+    height: 44px;
+  }
+
   .file-box {
     margin: 4px;
     padding: 4px;
     background: #888;
+  }
+
+  .icon-folder-o{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 1312v-704q0-40-28-68t-68-28h-704q-40 0-68-28t-28-68v-64q0-40-28-68t-68-28h-320q-40 0-68 28t-28 68v960q0 40 28 68t68 28h1216q40 0 68-28t28-68zm128-704v704q0 92-66 158t-158 66h-1216q-92 0-158-66t-66-158v-960q0-92 66-158t158-66h320q92 0 158 66t66 158v32h672q92 0 158 66t66 158z"/></svg>');
+  }
+  .icon-folder-open-o{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1845 931q0-35-53-35h-1088q-40 0-85.5 21.5t-71.5 52.5l-294 363q-18 24-18 40 0 35 53 35h1088q40 0 86-22t71-53l294-363q18-22 18-39zm-1141-163h768v-160q0-40-28-68t-68-28h-576q-40 0-68-28t-28-68v-64q0-40-28-68t-68-28h-320q-40 0-68 28t-28 68v853l256-315q44-53 116-87.5t140-34.5zm1269 163q0 62-46 120l-295 363q-43 53-116 87.5t-140 34.5h-1088q-92 0-158-66t-66-158v-960q0-92 66-158t158-66h320q92 0 158 66t66 158v32h544q92 0 158 66t66 158v160h192q54 0 99 24.5t67 70.5q15 32 15 68z"/></svg>');
+  }
+  .icon-file-o{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1596 380q28 28 48 76t20 88v1152q0 40-28 68t-68 28h-1344q-40 0-68-28t-28-68v-1600q0-40 28-68t68-28h896q40 0 88 20t76 48zm-444-244v376h376q-10-29-22-41l-313-313q-12-12-41-22zm384 1528v-1024h-416q-40 0-68-28t-28-68v-416h-768v1536h1280z"/></svg>');
+  }
+  .icon-file-text-o{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1596 380q28 28 48 76t20 88v1152q0 40-28 68t-68 28h-1344q-40 0-68-28t-28-68v-1600q0-40 28-68t68-28h896q40 0 88 20t76 48zm-444-244v376h376q-10-29-22-41l-313-313q-12-12-41-22zm384 1528v-1024h-416q-40 0-68-28t-28-68v-416h-768v1536h1280zm-1024-864q0-14 9-23t23-9h704q14 0 23 9t9 23v64q0 14-9 23t-23 9h-704q-14 0-23-9t-9-23v-64zm736 224q14 0 23 9t9 23v64q0 14-9 23t-23 9h-704q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h704zm0 256q14 0 23 9t9 23v64q0 14-9 23t-23 9h-704q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h704z"/></svg>');
+  }
+  .icon-download{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1344 1344q0-26-19-45t-45-19-45 19-19 45 19 45 45 19 45-19 19-45zm256 0q0-26-19-45t-45-19-45 19-19 45 19 45 45 19 45-19 19-45zm128-224v320q0 40-28 68t-68 28h-1472q-40 0-68-28t-28-68v-320q0-40 28-68t68-28h465l135 136q58 56 136 56t136-56l136-136h464q40 0 68 28t28 68zm-325-569q17 41-14 70l-448 448q-18 19-45 19t-45-19l-448-448q-31-29-14-70 17-39 59-39h256v-448q0-26 19-45t45-19h256q26 0 45 19t19 45v448h256q42 0 59 39z"/></svg>');
+  }
+  .icon-plus-square-o{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1344 800v64q0 14-9 23t-23 9h-352v352q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-352h-352q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h352v-352q0-14 9-23t23-9h64q14 0 23 9t9 23v352h352q14 0 23 9t9 23zm128 448v-832q0-66-47-113t-113-47h-832q-66 0-113 47t-47 113v832q0 66 47 113t113 47h832q66 0 113-47t47-113zm128-832v832q0 119-84.5 203.5t-203.5 84.5h-832q-119 0-203.5-84.5t-84.5-203.5v-832q0-119 84.5-203.5t203.5-84.5h832q119 0 203.5 84.5t84.5 203.5z"/></svg>');
+  }
+  .icon-plus-square{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1408 960v-128q0-26-19-45t-45-19h-320v-320q0-26-19-45t-45-19h-128q-26 0-45 19t-19 45v320h-320q-26 0-45 19t-19 45v128q0 26 19 45t45 19h320v320q0 26 19 45t45 19h128q26 0 45-19t19-45v-320h320q26 0 45-19t19-45zm256-544v960q0 119-84.5 203.5t-203.5 84.5h-960q-119 0-203.5-84.5t-84.5-203.5v-960q0-119 84.5-203.5t203.5-84.5h960q119 0 203.5 84.5t84.5 203.5z"/></svg>');
+  }
+  .icon-level-up{
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1402 603q-18 37-58 37h-192v864q0 14-9 23t-23 9h-704q-21 0-29-18-8-20 4-35l160-192q9-11 25-11h320v-640h-192q-40 0-58-37-17-37 9-68l320-384q18-22 49-22t49 22l320 384q27 32 9 68z"/></svg>');
+  }
+
+  ul#fmtree{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul#fmtree li{
+    background-repeat: no-repeat;
+    padding-left: 27px;
+    margin: 6px;
+  }
+  ul#fmtree li a{
+    color: black;
+    text-decoration: none;
+  }
+  ul#fmtree li a:hover{
+    text-decoration: underline;
+  }
+  .disabled{
+    cursor: pointer;
+    opacity: 0.3;
+  }
+  .disabled a:hover{
+    text-decoration: none;
+  }
+
+  #fmpath {
+    font-size: small;
+    background-color: #949494;
+    padding: 3px;
+  }
+
+  ul#fmtoolbar {
+    background: #aaa;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul#fmtoolbar li {
+    display: inline-block;
+    background-repeat: no-repeat;
+    margin: 5px;
+    padding: 0;
+  }
+  ul#fmtoolbar li a {
+    display: inline-block;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    font-size: small;
+    color: black;
+    margin: 0;
+    text-decoration: none;
+  }
+  ul#fmtoolbar li a:hover {
+    text-decoration: underline;
+  }
+
+
+  .fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px black;
+    text-align: center;
+    background: #ccc;
+    padding: 3px;
+  }
+  .fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
   }
 </style>
 <script src="term.js"></script>
@@ -46,29 +158,47 @@
 
 <div style="display:inline-block; vertical-align:top;">
 <form>
-<input type="text" name="webrepl_url" id="url" value="ws://192.168.4.1:8266/" />
+<input type="text" name="webrepl_url" id="url" value="ws://192.168.0.82:8266/" />
 <input type="submit" id="button" value="Connect" onclick="button_click(); return false;" />
 </form>
 <div id="term">
 </div>
 </div>
 
-<div id="file-boxes" style="display:inline-block; vertical-align:top; width:230px;">
+<div id="file-boxes" style="display:inline-block; vertical-align:top; width:333px; margin-top: 40px;">
+
+  <div class="file-box" id="file-manager">
+    <strong>File manager</strong>
+    <ul id="fmtoolbar">
+      <li><a class="icon-level-up" href="#" title="Go up one level">Up</a></li>
+      <li><a class="icon-plus-square" href="#" title="New directory">New folder</a></li>
+      <li><a class="icon-download" href="#" title="Download selected file">Download file</a></li>
+    </ul>
+    <div id="fmpath">Current path: <span>/</span></div>
+    <ul id="fmtree">
+    </ul>
+  </div>
 
   <div class="file-box">
-    <strong>Send a file</strong>
-    <input type="file" id="put-file-select" />
-    <div id="put-file-list"></div>
+    <strong>Upload file</strong>
+    <div class="fileUpload">
+      <span>Select file to upload</span>
+      <input type="file" class="upload" id="put-file-select" />
+    </div>
+    <div style="font-size: small;" id="put-file-list"></div>
     <input type="button" value="Send to device" id="put-file-button" onclick="put_file(); return false;" />
   </div>
 
+  <!--
   <div class="file-box">
     <strong>Get a file</strong>
     <input type="text" name="get_filename" id="get_filename" value="" size="13" />
     <input type="button" value="Get from device" onclick="get_file(); return false;" />
   </div>
+  -->
 
   <div class="file-box" id="file-status"><span style="color:#707070">(file operation status)</span></div>
+
 
 </div>
 
@@ -88,9 +218,10 @@ var put_file_name = null;
 var put_file_data = null;
 var get_file_name = null;
 var get_file_data = null;
+var disable_echo = false;
 
 function calculate_size(win) {
-    var cols = Math.max(80, Math.min(150, (win.innerWidth - 280) / 7)) | 0;
+    var cols = Math.max(80, Math.min(150, (win.innerWidth - 380) / 7)) | 0;
     var rows = Math.max(24, Math.min(80, (win.innerHeight - 180) / 12)) | 0;
     return [cols, rows];
 }
@@ -107,7 +238,7 @@ function calculate_size(win) {
         rows: size[1],
         useStyle: true,
         screenKeys: true,
-        cursorBlink: false
+        cursorBlink: true
       });
       term.open(document.getElementById("term"));
       show_https_warning();
@@ -152,6 +283,59 @@ function update_file_status(s) {
     document.getElementById('file-status').innerHTML = s;
 }
 
+var fileman = {
+  path: '/',
+  content: [],
+  data: '',
+  initialized: false,
+  init: function(){
+    console.log('fileman init');
+    disable_echo = true;
+    // \u0003 == Ctrl+C
+    ws.send('\u0003print_repl_response(list(os.ilistdir("/")), "ls /")\r\n');
+    this.initialized = true;
+  },
+  update: function() {
+    console.log("fileman update with data: ", this.data);
+    disable_echo = false;
+    const lines = this.data.split('\n');
+    if(!lines[0].startsWith(cmd_char+'replresp') || lines[lines.length-1]!==cmd_char) {
+      console.log("invalid response: ", this.data);
+      this.data = '';
+      return;
+    }
+    this.content = JSON.parse(lines[1].substring(1));
+    this.data = '';
+    this.refresh();
+  },
+  refresh: function(){
+    if(!fileman.initialized){
+      fileman.init();
+      return;
+    }
+    let tree = document.getElementById('fmtree');
+    tree.innerHTML = '';
+
+    // sort directories first
+    const dirs = [];
+    const files = [];
+    for(let i=0; i<this.content.length; i++){
+      const el = this.content[i];
+      if(el[1]&0x4000) {
+        dirs.push(el);
+      }
+      else{
+        files.push(el);
+      }
+    }
+    const items = dirs.concat(files);
+
+    for(let i=0; i<items.length; i++){
+      tree.innerHTML += '<li class="' + (items[i][1]&0x4000?'icon-folder-o':'icon-file-o') + '"><a href="#">'+items[i][0] + '</a></li>';
+    }
+  }
+};
+
 function connect(url) {
     window.location.hash = url.substring(5);
     ws = new WebSocket(url);
@@ -159,9 +343,11 @@ function connect(url) {
     ws.onopen = function() {
         term.removeAllListeners('data');
         term.on('data', function(data) {
+            if(disable_echo) return;
             // Pasted data from clipboard will likely contain
             // LF as EOL chars.
             data = data.replace(/\n/g, "\r");
+            console.log("term sent:", data, data.charCodeAt(0));
             ws.send(data);
         });
 
@@ -173,83 +359,7 @@ function connect(url) {
         term.element.focus();
         term.write('\x1b[31mWelcome to MicroPython!\x1b[m\r\n');
 
-        ws.onmessage = function(event) {
-            if (event.data instanceof ArrayBuffer) {
-                var data = new Uint8Array(event.data);
-                switch (binary_state) {
-                    case 11:
-                        // first response for put
-                        if (decode_resp(data) == 0) {
-                            // send file data in chunks
-                            for (var offset = 0; offset < put_file_data.length; offset += 1024) {
-                                ws.send(put_file_data.slice(offset, offset + 1024));
-                            }
-                            binary_state = 12;
-                        }
-                        break;
-                    case 12:
-                        // final response for put
-                        if (decode_resp(data) == 0) {
-                            update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
-                        } else {
-                            update_file_status('Failed sending ' + put_file_name);
-                        }
-                        binary_state = 0;
-                        break;
-
-                    case 21:
-                        // first response for get
-                        if (decode_resp(data) == 0) {
-                            binary_state = 22;
-                            var rec = new Uint8Array(1);
-                            rec[0] = 0;
-                            ws.send(rec);
-                        }
-                        break;
-                    case 22: {
-                        // file data
-                        var sz = data[0] | (data[1] << 8);
-                        if (data.length == 2 + sz) {
-                            // we assume that the data comes in single chunks
-                            if (sz == 0) {
-                                // end of file
-                                binary_state = 23;
-                            } else {
-                                // accumulate incoming data to get_file_data
-                                var new_buf = new Uint8Array(get_file_data.length + sz);
-                                new_buf.set(get_file_data);
-                                new_buf.set(data.slice(2), get_file_data.length);
-                                get_file_data = new_buf;
-                                update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-
-                                var rec = new Uint8Array(1);
-                                rec[0] = 0;
-                                ws.send(rec);
-                            }
-                        } else {
-                            binary_state = 0;
-                        }
-                        break;
-                    }
-                    case 23:
-                        // final response
-                        if (decode_resp(data) == 0) {
-                            update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                            saveAs(new Blob([get_file_data], {type: "application/octet-stream"}), get_file_name);
-                        } else {
-                            update_file_status('Failed getting ' + get_file_name);
-                        }
-                        binary_state = 0;
-                        break;
-                    case 31:
-                        // first (and last) response for GET_VER
-                        console.log('GET_VER', data);
-                        binary_state = 0;
-                        break;
-                }
-            }
-            term.write(event.data);
-        };
+        ws.onmessage = onmessage;
     };
 
     ws.onclose = function() {
@@ -261,6 +371,112 @@ function connect(url) {
         prepare_for_connect();
     }
 }
+
+var cmd_state = 0; // 0-no repl cmd, 1-wait for origin query, 2-read data
+const cmd_char = '¬';
+var prompt_available = false;
+
+function fileman_debug(){
+  fileman.content = [["boot.py", 32768, 0, 162], ["webrepl_cfg.py", 32768, 0, 18], ["test.py", 32768, 0, 15], ["main.py", 32768, 0, 165], ["mp_utils.py", 32768, 0, 341], ["testdir", 16384, 0, 0]];
+  fileman.initialized = true;
+  fileman.refresh();
+}
+
+function onmessage(event) {
+  if (event.data instanceof ArrayBuffer) {
+      var data = new Uint8Array(event.data);
+      switch (binary_state) {
+          case 11:
+              // first response for put
+              if (decode_resp(data) == 0) {
+                  // send file data in chunks
+                  for (var offset = 0; offset < put_file_data.length; offset += 1024) {
+                      ws.send(put_file_data.slice(offset, offset + 1024));
+                  }
+                  binary_state = 12;
+              }
+              break;
+          case 12:
+              // final response for put
+              if (decode_resp(data) == 0) {
+                  update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
+              } else {
+                  update_file_status('Failed sending ' + put_file_name);
+              }
+              binary_state = 0;
+              break;
+
+          case 21:
+              // first response for get
+              if (decode_resp(data) == 0) {
+                  binary_state = 22;
+                  var rec = new Uint8Array(1);
+                  rec[0] = 0;
+                  ws.send(rec);
+              }
+              break;
+          case 22: {
+              // file data
+              var sz = data[0] | (data[1] << 8);
+              if (data.length == 2 + sz) {
+                  // we assume that the data comes in single chunks
+                  if (sz == 0) {
+                      // end of file
+                      binary_state = 23;
+                  } else {
+                      // accumulate incoming data to get_file_data
+                      var new_buf = new Uint8Array(get_file_data.length + sz);
+                      new_buf.set(get_file_data);
+                      new_buf.set(data.slice(2), get_file_data.length);
+                      get_file_data = new_buf;
+                      update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
+
+                      var rec = new Uint8Array(1);
+                      rec[0] = 0;
+                      ws.send(rec);
+                  }
+              } else {
+                  binary_state = 0;
+              }
+              break;
+          }
+          case 23:
+              // final response
+              if (decode_resp(data) == 0) {
+                  update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
+                  saveAs(new Blob([get_file_data], {type: "application/octet-stream"}), get_file_name);
+              } else {
+                  update_file_status('Failed getting ' + get_file_name);
+              }
+              binary_state = 0;
+              break;
+          case 31:
+              // first (and last) response for GET_VER
+              console.log('GET_VER', data);
+              binary_state = 0;
+              break;
+      }
+  }
+
+  if(prompt_available != (event.data.substr(-4)==='>>> ')){
+    prompt_available = (binary_state==0) && !prompt_available;
+    fileman.refresh();
+  }
+
+  if(event.data[0]==cmd_char || cmd_state==1) {
+    cmd_state = 1;
+    fileman.data += event.data;
+    if(event.data.trim('\r\n')==cmd_char) {
+      fileman.update();
+      cmd_state = 0;
+      return;
+    }
+    return;
+  }
+
+  term.write(event.data);
+}
+
 
 function decode_resp(data) {
     if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
